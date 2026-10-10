@@ -1,0 +1,9 @@
+# Repos a reviewer of THIS repo may search and cite, materialized under
+# .siblings/<owner>/<repo>.
+#
+# `plow-hermes-agent` is the base this image builds FROM and whose plow-init composes
+# the persona this repo writes; `plow` serves the `definition` setting this repo reads
+# and owns the build codes that set it.
+
+plow-pbc/plow-hermes-agent
+plow-pbc/plow
