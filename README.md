@@ -41,9 +41,9 @@ An agent never comes up as something it can't confirm it is:
 
 `runtime/build.py`, which only Plow Creator's persona tells the model to run:
 
-- `lines` lists the owner's numbers: free, built by this Creator, its own, or busy.
+- `lines` lists the owner's numbers: free, built by this Creator (with the agent's name), its own, or busy.
 - `build NUMBER < definition.json` checks the definition with `pas.parse`. It then asks Plow for a build code (`POST /v1/auth/agent-invites/opportunities/build`) tied to the owner's newest message in their 1:1 chat with the Creator.
-- `show NUMBER` returns the definition it last built there, for changes.
+- `show NUMBER` asks Plow (`GET …/build/{line}`) what the agent it built there runs now. A change therefore never starts from a code the owner didn't text.
 
 Plow mints the code only for the owner's own message. It switches the agent on, or changes it in place, only when the owner texts it to that number. The Creator never holds the authority to create an agent.
 
