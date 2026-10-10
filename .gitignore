@@ -1,0 +1,6 @@
+.env
+__pycache__/
+.pytest_cache/
+
+# knightwatch materializes declared review siblings here during a review.
+.siblings/
