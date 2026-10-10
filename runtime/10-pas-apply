@@ -1,0 +1,5 @@
+#!/command/with-contenv sh
+# As root, before any service starts: write this agent's persona from its definition in
+# Plow, so plow-init composes SOUL.md from it on this boot. with-contenv supplies
+# PLOW_API_BASE. pas.py never fails the boot.
+exec /opt/hermes/.venv/bin/python /opt/plow-creator/pas.py apply

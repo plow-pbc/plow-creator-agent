@@ -1,0 +1,7 @@
+# Build context is the repo root; only runtime/, LICENSE and NOTICE are copied.
+.git
+.env
+**/__pycache__
+**/*.py[co]
+**/.pytest_cache
+tests
