@@ -37,6 +37,16 @@ An agent never comes up as something it can't confirm it is:
 - Fields are exactly these, and the whole definition is at most 8 KB.
 - It holds no backend-specific field. The same definition can later be rendered for other agent runtimes; this image renders it for Hermes.
 
+## How the Creator builds
+
+`runtime/build.py`, which only Plow Creator's persona tells the model to run:
+
+- `lines` lists the owner's numbers: free, built by this Creator, its own, or busy.
+- `build NUMBER < definition.json` checks the definition with `pas.parse`. It then asks Plow for a build code (`POST /v1/auth/agent-invites/opportunities/build`) tied to the owner's newest message in their 1:1 chat with the Creator.
+- `show NUMBER` returns the definition it last built there, for changes.
+
+Plow mints the code only for the owner's own message. It switches the agent on, or changes it in place, only when the owner texts it to that number. The Creator never holds the authority to create an agent.
+
 ## Why the reader lives here and not in the base
 
 Only this image takes its brain from data. When the base serves per-agent config itself ([plow-hermes-agent#132](https://github.com/plow-pbc/plow-hermes-agent/issues/132)), `10-pas-apply` is deleted in favour of it.
@@ -59,4 +69,4 @@ Without `PLOW_API_BASE`, the container boots as Plow Creator.
 ## Status
 
 - The image and its definition reader are here.
-- Still to come: the Creator's build skill, and the Plow change that turns a definition into a build code ([plow-agents#45](https://github.com/plow-pbc/plow-agents/issues/45)).
+- The build step is here. It needs Plow's build-code route ([plow#2349](https://github.com/plow-pbc/plow/pull/2349)) deployed; until then `build` gets a 404 from Plow and says so.
