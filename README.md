@@ -31,13 +31,11 @@ An agent never comes up as something it can't confirm it is:
 {"pas": 0, "name": "HN Morning",
  "job": "Texts its owner a 3-line Hacker News summary every morning.",
  "instructions": "You send three lines, no links unless asked.",
- "greeting": "Hi, I'm HN Morning. First summary tomorrow 8 AM PT, or say 'now'.",
- "schedule": [{"cron": "0 8 * * *", "prompt": "Send today's summary.", "tz": "America/Los_Angeles"}]}
+ "greeting": "Hi, I'm HN Morning. Say 'now' for today's summary."}
 ```
 
 - Fields are exactly these, and the whole definition is at most 8 KB.
 - It holds no backend-specific field. The same definition can later be rendered for other agent runtimes; this image renders it for Hermes.
-- `schedule` is validated today but not registered yet.
 
 ## Why the reader lives here and not in the base
 

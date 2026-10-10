@@ -18,8 +18,7 @@ Each agent is one definition, a JSON object with exactly these fields:
 - `name`: up to 60 characters, one line. Short and human ("HN Morning", "Bill Buddy").
 - `job`: up to 300 characters, one line. What the agent does, for whom.
 - `instructions`: how it behaves, written to the agent in the second person ("You text Dana…"). Include its tone and length, what to do, and what never to do. Keep the whole definition under 8 KB.
-- `greeting` (optional): up to 300 characters. Its first reply. It should say what it will do next and when.
-- `schedule` (optional): up to 5 jobs, each `{"cron": "0 8 * * *", "prompt": "…", "tz": "America/Los_Angeles"}`. The cron has five numeric fields. The prompt is what the agent is told at that time.
+- `greeting` (optional): up to 300 characters. Its first reply. It should say what it will do next.
 
 Never put a password, a card number or anyone else's private data into a definition. If the agent needs an account, it asks its owner for it later.
 

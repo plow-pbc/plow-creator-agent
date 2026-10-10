@@ -19,7 +19,6 @@ DEFINITION = {
     "job": "Texts its owner a 3-line Hacker News summary every morning.",
     "instructions": "You send three lines, no links unless asked.",
     "greeting": "Hi, I'm HN Morning. First summary tomorrow 8 AM PT, or say 'now'.",
-    "schedule": [{"cron": "0 8 * * *", "prompt": "Send today's summary."}],
 }
 
 
@@ -31,9 +30,6 @@ def test_definition_becomes_the_persona():
     persona = pas.persona_for(identity(json.dumps(DEFINITION)), CREATOR)
     for text in ("# HN Morning", DEFINITION["job"], DEFINITION["instructions"], DEFINITION["greeting"]):
         assert text in persona
-    assert pas.parse(json.dumps(DEFINITION))["schedule"] == [
-        {"cron": "0 8 * * *", "prompt": "Send today's summary.", "tz": "America/Los_Angeles"}
-    ]
 
 
 @pytest.mark.parametrize("settings", [identity(""), identity(None), {"agent": {"settings": {}}}, {}])
@@ -51,9 +47,6 @@ def test_no_definition_is_plow_creator(settings):
         (json.dumps({**DEFINITION, "pas": True}), "pas must be 0"),
         (json.dumps({**DEFINITION, "name": "two\nlines"}), "name must be one line"),
         (json.dumps({**DEFINITION, "instructions": "x" * 9000}), "larger than 8192 bytes"),
-        (json.dumps({**DEFINITION, "schedule": [{"cron": "@daily", "prompt": "p"}]}), "5 numeric fields"),
-        (json.dumps({**DEFINITION, "schedule": [{"cron": "0 8 * * *", "prompt": "p", "tz": "$(id)"}]}), "tz must be"),
-        (json.dumps({**DEFINITION, "schedule": [{"cron": "0 8 * * *", "prompt": "p"}] * 6}), "at most 5 jobs"),
     ],
 )
 def test_bad_definition_says_so_and_never_becomes_creator(raw, reason):

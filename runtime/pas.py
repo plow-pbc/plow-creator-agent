@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import json
 import os
-import re
 import sys
 import tempfile
 import time
@@ -24,10 +23,8 @@ import urllib.error
 import urllib.request
 
 MAX_BYTES = 8192
-FIELDS = {"pas", "name", "job", "instructions", "schedule", "greeting"}
+FIELDS = {"pas", "name", "job", "instructions", "greeting"}
 REQUIRED = {"pas", "name", "job", "instructions"}
-CRON_FIELD = re.compile(r"^[0-9*/,-]+$")
-TIMEZONE = re.compile(r"^(UTC|[A-Za-z_]+(/[A-Za-z0-9_+-]+){1,2})$")
 
 # plow-init composes SOUL.md on every boot from the base persona followed by this file.
 PERSONA = "/opt/hermes/plow-seed/persona.md"
@@ -45,23 +42,6 @@ def _text(source: dict, key: str, limit: int, *, one_line: bool = True, required
     if one_line and "\n" in value.strip():
         raise ValueError(f"{key} must be one line")
     return value.strip()
-
-
-def _schedule(rows: object) -> list[dict]:
-    if not isinstance(rows, list) or len(rows) > 5:
-        raise ValueError("schedule must be a list of at most 5 jobs")
-    checked = []
-    for row in rows:
-        if not isinstance(row, dict) or row.keys() - {"cron", "prompt", "tz"} or not {"cron", "prompt"} <= row.keys():
-            raise ValueError("each schedule job must be {cron, prompt, tz}")
-        cron = row["cron"].split() if isinstance(row["cron"], str) else []
-        if len(cron) != 5 or not all(CRON_FIELD.match(field) for field in cron):
-            raise ValueError("schedule cron must be 5 numeric fields")
-        timezone = row.get("tz", "America/Los_Angeles")
-        if not isinstance(timezone, str) or not TIMEZONE.match(timezone):
-            raise ValueError("schedule tz must be a timezone like America/Los_Angeles")
-        checked.append({"cron": " ".join(cron), "prompt": _text(row, "prompt", 500, one_line=False), "tz": timezone})
-    return checked
 
 
 def parse(raw: str) -> dict:
@@ -87,7 +67,6 @@ def parse(raw: str) -> dict:
         "job": _text(definition, "job", 300),
         "instructions": _text(definition, "instructions", MAX_BYTES, one_line=False),
         "greeting": _text(definition, "greeting", 300, required=False),
-        "schedule": _schedule(definition.get("schedule", [])),
     }
 
 
