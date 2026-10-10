@@ -11,8 +11,10 @@ FROM public.ecr.aws/e1h7x4a2/plow-cloud-agents:base-7422f99a12b15489408cacfbf884
 
 # Root-owned and outside every home, so no turn can rewrite what the next boot runs.
 # Modes are set in their own step: `COPY --chmod` is BuildKit-only (plow-hermes-agent README).
-COPY runtime/creator.md runtime/pas.py /opt/plow-creator/
+# build.py lives here and not in skills/: every agent this image runs gets the skills
+# folder, but only Plow Creator's persona tells the model to build.
+COPY runtime/creator.md runtime/pas.py runtime/build.py /opt/plow-creator/
 COPY runtime/10-pas-apply /etc/cont-init.d/10-pas-apply
 RUN chmod 0755 /opt/plow-creator /etc/cont-init.d/10-pas-apply \
- && chmod 0644 /opt/plow-creator/creator.md /opt/plow-creator/pas.py
+ && chmod 0644 /opt/plow-creator/creator.md /opt/plow-creator/pas.py /opt/plow-creator/build.py
 COPY LICENSE NOTICE /usr/share/doc/plow-creator-agent/

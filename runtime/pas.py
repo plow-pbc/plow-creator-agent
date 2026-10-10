@@ -112,7 +112,7 @@ def persona_for(identity: dict | None, creator: str) -> str:
         return fallback(str(error))
 
 
-class _RefuseRedirects(urllib.request.HTTPRedirectHandler):
+class RefuseRedirects(urllib.request.HTTPRedirectHandler):
     """A redirect would carry the Authorization header to wherever it points. plow-init refuses them too."""
 
     def redirect_request(self, *args, **kwargs):
@@ -126,7 +126,7 @@ def ask_plow(base: str, bearer: str, *, attempts: int = 24, delay: float = 5.0) 
     a minute after a rotation (plow-init waits that out too). A 404 or any other 4xx is
     an answer, so it gets no retry.
     """
-    opener = urllib.request.build_opener(_RefuseRedirects)
+    opener = urllib.request.build_opener(RefuseRedirects)
     request = urllib.request.Request(
         base.rstrip("/") + "/v1/agents/me",
         headers={"Authorization": f"Bearer {bearer}", "Accept": "application/json"},
